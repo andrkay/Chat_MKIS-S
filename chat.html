@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Чат МКИСЫ</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="chat-container">
+        <div class="logout-button-container">
+            <button onclick="logout()">Выйти</button>
+        </div>
+        <img class="chat-image" src="https://sun9-77.userapi.com/impg/LAA-WYvJBss3fmYywJ1hJp78aQn0kE51MYROcA/Jm4eBsBN7M0.jpg?size=596x596&quality=95&sign=0cd75c5ca2680983776afcd07e2f9dc1&c_uniq_tag=g__ENhwE7FFCs57bPWst-Ii2_5mUZ9_5z-45YioDayw&type=album" alt="Логотип МКИС" />
+        <h1>Чат МКИСЫ</h1>
+        <textarea placeholder="Напиши сообщение"></textarea>
+        <button onclick="send()">Отправить сообщение</button>
+        <ul>
+            <!-- Список сообщений -->
+        </ul>
+        <script src="https://code.jquery.com/jquery-3.7.1.js"
+                integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+                crossorigin="anonymous">
+
+        </script><!-- Подключение библиотеки jQuery -->
+
+        <script>
+            setInterval(function () {
+                getMassages();
+            }, 1000)
+
+            $(document).keypress(function (event) {
+                if (event.keyCode == 13) {
+                    send();
+                }
+            })
+
+            function send() {
+                let text = document.querySelector('textarea').value;
+                console.log(document.querySelector('ul').innerHTML = text);
+                $.ajax({
+                    type: "POST",
+                    url: "connect.php",
+                    data: {
+                        'text': text
+                    }
+                });
+                document.querySelector('textarea').value = "";
+            }
+
+            function getMassages() {
+                $.ajax({
+                    type: "POST",
+                    url: "connect.php",
+                    data: {
+                        'get': "get"
+                    }
+                }).done(function (result) {
+                    $('ul').html(result);
+                })
+            }
+
+            function logout() {
+                $.ajax({
+                    type: "POST",
+                    url: "logout.php",
+                    success: function (data) {
+                        window.location.href = "login.html";
+                    }
+                });
+            }
+        </script>
+    </div>
+</body>
+</html>
